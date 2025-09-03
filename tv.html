@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Planilha Pública</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+  <style>
+    body {
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <h1>Planilha de Funcionários</h1>
+  <table id="planilha">
+    <thead>
+      <tr>
+        <th>Funcionário</th>
+        <th>Segunda</th>
+        <th>Terça</th>
+        <th>Quarta</th>
+        <th>Quinta</th>
+        <th>Sexta</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const spreadsheetData = JSON.parse(localStorage.getItem('spreadsheetData'));
+      const tbody = document.querySelector('#planilha tbody');
+
+      if (spreadsheetData) {
+        Object.entries(spreadsheetData).forEach(([name, dias]) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${name}</td>
+            <td>${dias.monday}</td>
+            <td>${dias.tuesday}</td>
+            <td>${dias.wednesday}</td>
+            <td>${dias.thursday}</td>
+            <td>${dias.friday}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } else {
+        tbody.innerHTML = `<tr><td colspan="6">Nenhum dado disponível</td></tr>`;
+      }
+    });
+  </script>
+</body>
+</html>
