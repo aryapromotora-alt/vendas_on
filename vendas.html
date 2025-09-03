@@ -47,12 +47,10 @@
   </table>
 
   <script type="module">
-    // Importação dos SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-    // Configuração do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAU0mGexI8c7UIdjlCScimOhxjkCW13qaI",
       authDomain: "vendas-on-f3ae1.firebaseapp.com",
@@ -63,16 +61,16 @@
       measurementId: "G-QN7HK21M2H"
     };
 
-    // Inicialização do Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
 
-    // Buscar dados da coleção "vendas"
     const tabela = document.querySelector("#tabela-vendas tbody");
     const vendasRef = collection(db, "vendas");
 
-    getDocs(vendasRef).then((snapshot) => {
+    onSnapshot(vendasRef, (snapshot) => {
+      tabela.innerHTML = ""; // Limpa a tabela antes de atualizar
+
       snapshot.forEach((doc) => {
         const dados = doc.data();
         const linha = `
@@ -88,9 +86,6 @@
         `;
         tabela.innerHTML += linha;
       });
-    }).catch((error) => {
-      console.error("Erro ao buscar dados:", error);
-      tabela.innerHTML = `<tr><td colspan="7">Erro ao carregar dados.</td></tr>`;
     });
   </script>
 </body>
