@@ -40,37 +40,57 @@
     </div>
   </div>
 
-  <script>
+  <!-- Firebase + Firestore -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAU0mGexI8c7UIdjlCScimOhxjkCW13qaI",
+      authDomain: "vendas-on-f3ae1.firebaseapp.com",
+      projectId: "vendas-on-f3ae1",
+      storageBucket: "vendas-on-f3ae1.appspot.com",
+      messagingSenderId: "645658657777",
+      appId: "1:645658657777:web:7cad80b0a4cb452873ba50",
+      measurementId: "G-QN7HK21M2H"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
     function formatCurrency(value) {
       return `R$ ${value.toFixed(2).replace('.', ',')}`;
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-      const data = JSON.parse(localStorage.getItem('spreadsheetData'));
+    document.addEventListener('DOMContentLoaded', async function () {
       const tbody = document.getElementById('vendas-body');
 
       let totalMonday = 0, totalTuesday = 0, totalWednesday = 0, totalThursday = 0, totalFriday = 0, totalGeral = 0;
 
-      if (data) {
-        Object.entries(data).forEach(([name, dias]) => {
-          const totalFuncionario = dias.monday + dias.tuesday + dias.wednesday + dias.thursday + dias.friday;
-          totalMonday += dias.monday;
-          totalTuesday += dias.tuesday;
-          totalWednesday += dias.wednesday;
-          totalThursday += dias.thursday;
-          totalFriday += dias.friday;
+      try {
+        const querySnapshot = await getDocs(collection(db, "vendas"));
+        querySnapshot.forEach((doc) => {
+          const dados = doc.data();
+          const totalFuncionario =
+            dados.segunda + dados.terca + dados.quarta + dados.quinta + dados.sexta;
+
+          totalMonday += dados.segunda;
+          totalTuesday += dados.terca;
+          totalWednesday += dados.quarta;
+          totalThursday += dados.quinta;
+          totalFriday += dados.sexta;
           totalGeral += totalFuncionario;
 
           const row = document.createElement('tr');
           row.innerHTML = `
-  <td class="employee-name">${name}</td>
-  <td>${formatCurrency(dias.monday)}</td>
-  <td>${formatCurrency(dias.tuesday)}</td>
-  <td>${formatCurrency(dias.wednesday)}</td>
-  <td>${formatCurrency(dias.thursday)}</td>
-  <td>${formatCurrency(dias.friday)}</td>
-  <td class="total-cell">${formatCurrency(totalFuncionario)}</td>
-`;
+            <td class="employee-name">${dados.funcionario}</td>
+            <td>${formatCurrency(dados.segunda)}</td>
+            <td>${formatCurrency(dados.terca)}</td>
+            <td>${formatCurrency(dados.quarta)}</td>
+            <td>${formatCurrency(dados.quinta)}</td>
+            <td>${formatCurrency(dados.sexta)}</td>
+            <td class="total-cell">${formatCurrency(totalFuncionario)}</td>
+          `;
           tbody.appendChild(row);
         });
 
@@ -80,33 +100,11 @@
         document.getElementById('total-thursday').textContent = formatCurrency(totalThursday);
         document.getElementById('total-friday').textContent = formatCurrency(totalFriday);
         document.getElementById('total-geral').textContent = formatCurrency(totalGeral);
-      } else {
-        tbody.innerHTML = `<tr><td colspan="7">Nenhum dado disponível</td></tr>`;
+      } catch (error) {
+        console.error("Erro ao buscar dados do Firestore:", error);
+        tbody.innerHTML = `<tr><td colspan="7">Erro ao carregar dados</td></tr>`;
       }
     });
   </script>
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyAU0mGexI8c7UIdjlCScimOhxjkCW13qaI",
-    authDomain: "vendas-on-f3ae1.firebaseapp.com",
-    projectId: "vendas-on-f3ae1",
-    storageBucket: "vendas-on-f3ae1.firebasestorage.app",
-    messagingSenderId: "645658657777",
-    appId: "1:645658657777:web:7cad80b0a4cb452873ba50",
-    measurementId: "G-QN7HK21M2H"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
 </body>
 </html>
