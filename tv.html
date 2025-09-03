@@ -70,25 +70,32 @@
       try {
         const querySnapshot = await getDocs(collection(db, "vendas"));
         querySnapshot.forEach((doc) => {
+          const nome = doc.id; // usa o ID como nome do funcionário
           const dados = doc.data();
-          const totalFuncionario =
-            dados.segunda + dados.terca + dados.quarta + dados.quinta + dados.sexta;
 
-          totalMonday += dados.segunda;
-          totalTuesday += dados.terca;
-          totalWednesday += dados.quarta;
-          totalThursday += dados.quinta;
-          totalFriday += dados.sexta;
+          const segunda = dados.segunda || 0;
+          const terca = dados.terca || 0;
+          const quarta = dados.quarta || 0;
+          const quinta = dados.quinta || 0;
+          const sexta = dados.sexta || 0;
+
+          const totalFuncionario = segunda + terca + quarta + quinta + sexta;
+
+          totalMonday += segunda;
+          totalTuesday += terca;
+          totalWednesday += quarta;
+          totalThursday += quinta;
+          totalFriday += sexta;
           totalGeral += totalFuncionario;
 
           const row = document.createElement('tr');
           row.innerHTML = `
-            <td class="employee-name">${dados.funcionario}</td>
-            <td>${formatCurrency(dados.segunda)}</td>
-            <td>${formatCurrency(dados.terca)}</td>
-            <td>${formatCurrency(dados.quarta)}</td>
-            <td>${formatCurrency(dados.quinta)}</td>
-            <td>${formatCurrency(dados.sexta)}</td>
+            <td class="employee-name">${nome}</td>
+            <td>${formatCurrency(segunda)}</td>
+            <td>${formatCurrency(terca)}</td>
+            <td>${formatCurrency(quarta)}</td>
+            <td>${formatCurrency(quinta)}</td>
+            <td>${formatCurrency(sexta)}</td>
             <td class="total-cell">${formatCurrency(totalFuncionario)}</td>
           `;
           tbody.appendChild(row);
