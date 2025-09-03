@@ -4,60 +4,41 @@
   <meta charset="UTF-8">
   <title>Planilha de Vendas</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      background-color: #fff;
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: center;
-    }
-    th {
-      background-color: #eee;
-    }
-    tfoot th {
-      background-color: #ddd;
-    }
-  </style>
 </head>
 <body>
-  <h1>Planilha de Vendas</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Funcionário</th>
-        <th>Segunda</th>
-        <th>Terça</th>
-        <th>Quarta</th>
-        <th>Quinta</th>
-        <th>Sexta</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody id="vendas-body"></tbody>
-    <tfoot>
-      <tr>
-        <th>Total Diário</th>
-        <td id="total-monday">R$ 0,00</td>
-        <td id="total-tuesday">R$ 0,00</td>
-        <td id="total-wednesday">R$ 0,00</td>
-        <td id="total-thursday">R$ 0,00</td>
-        <td id="total-friday">R$ 0,00</td>
-        <td id="total-geral">R$ 0,00</td>
-      </tr>
-    </tfoot>
-  </table>
+  <div class="main-container">
+    <div class="header">
+      <h1>Planilha de Vendas</h1>
+    </div>
+
+    <div class="spreadsheet-container">
+      <table class="spreadsheet-table">
+        <thead>
+          <tr>
+            <th>Funcionário</th>
+            <th>Segunda</th>
+            <th>Terça</th>
+            <th>Quarta</th>
+            <th>Quinta</th>
+            <th>Sexta</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody id="vendas-body"></tbody>
+        <tfoot>
+          <tr class="daily-totals">
+            <td class="employee-name">Total Diário</td>
+            <td id="total-monday">R$ 0,00</td>
+            <td id="total-tuesday">R$ 0,00</td>
+            <td id="total-wednesday">R$ 0,00</td>
+            <td id="total-thursday">R$ 0,00</td>
+            <td id="total-friday">R$ 0,00</td>
+            <td id="total-geral">R$ 0,00</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
 
   <script>
     function formatCurrency(value) {
@@ -82,13 +63,13 @@
 
           const row = document.createElement('tr');
           row.innerHTML = `
-            <td>${name}</td>
-            <td>${formatCurrency(dias.monday)}</td>
-            <td>${formatCurrency(dias.tuesday)}</td>
-            <td>${formatCurrency(dias.wednesday)}</td>
-            <td>${formatCurrency(dias.thursday)}</td>
-            <td>${formatCurrency(dias.friday)}</td>
-            <td>${formatCurrency(totalFuncionario)}</td>
+            <td class="employee-name">${name}</td>
+            <td class="total-cell">${formatCurrency(dias.monday)}</td>
+            <td class="total-cell">${formatCurrency(dias.tuesday)}</td>
+            <td class="total-cell">${formatCurrency(dias.wednesday)}</td>
+            <td class="total-cell">${formatCurrency(dias.thursday)}</td>
+            <td class="total-cell">${formatCurrency(dias.friday)}</td>
+            <td class="total-cell">${formatCurrency(totalFuncionario)}</td>
           `;
           tbody.appendChild(row);
         });
