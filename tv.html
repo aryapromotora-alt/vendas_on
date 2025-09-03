@@ -63,14 +63,14 @@
 
           const row = document.createElement('tr');
           row.innerHTML = `
-            <td class="employee-name">${name}</td>
-            <td class="total-cell">${formatCurrency(dias.monday)}</td>
-            <td class="total-cell">${formatCurrency(dias.tuesday)}</td>
-            <td class="total-cell">${formatCurrency(dias.wednesday)}</td>
-            <td class="total-cell">${formatCurrency(dias.thursday)}</td>
-            <td class="total-cell">${formatCurrency(dias.friday)}</td>
-            <td class="total-cell">${formatCurrency(totalFuncionario)}</td>
-          `;
+  <td class="employee-name">${name}</td>
+  <td>${formatCurrency(dias.monday)}</td>
+  <td>${formatCurrency(dias.tuesday)}</td>
+  <td>${formatCurrency(dias.wednesday)}</td>
+  <td>${formatCurrency(dias.thursday)}</td>
+  <td>${formatCurrency(dias.friday)}</td>
+  <td class="total-cell">${formatCurrency(totalFuncionario)}</td>
+`;
           tbody.appendChild(row);
         });
 
