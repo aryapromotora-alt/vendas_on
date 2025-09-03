@@ -2,19 +2,21 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Planilha Pública</title>
+  <title>Planilha de Vendas</title>
   <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
   <style>
     body {
-      background-color: #f0f0f0;
+      background-color: #fff;
       font-family: Arial, sans-serif;
       padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
     }
     th, td {
       border: 1px solid #ccc;
@@ -22,13 +24,16 @@
       text-align: center;
     }
     th {
+      background-color: #eee;
+    }
+    tfoot th {
       background-color: #ddd;
     }
   </style>
 </head>
 <body>
-  <h1>Planilha de Funcionários</h1>
-  <table id="planilha">
+  <h1>Planilha de Vendas</h1>
+  <table>
     <thead>
       <tr>
         <th>Funcionário</th>
@@ -37,31 +42,65 @@
         <th>Quarta</th>
         <th>Quinta</th>
         <th>Sexta</th>
+        <th>Total</th>
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody id="vendas-body"></tbody>
+    <tfoot>
+      <tr>
+        <th>Total Diário</th>
+        <td id="total-monday">R$ 0,00</td>
+        <td id="total-tuesday">R$ 0,00</td>
+        <td id="total-wednesday">R$ 0,00</td>
+        <td id="total-thursday">R$ 0,00</td>
+        <td id="total-friday">R$ 0,00</td>
+        <td id="total-geral">R$ 0,00</td>
+      </tr>
+    </tfoot>
   </table>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const spreadsheetData = JSON.parse(localStorage.getItem('spreadsheetData'));
-      const tbody = document.querySelector('#planilha tbody');
+    function formatCurrency(value) {
+      return `R$ ${value.toFixed(2).replace('.', ',')}`;
+    }
 
-      if (spreadsheetData) {
-        Object.entries(spreadsheetData).forEach(([name, dias]) => {
+    document.addEventListener('DOMContentLoaded', function() {
+      const data = JSON.parse(localStorage.getItem('spreadsheetData'));
+      const tbody = document.getElementById('vendas-body');
+
+      let totalMonday = 0, totalTuesday = 0, totalWednesday = 0, totalThursday = 0, totalFriday = 0, totalGeral = 0;
+
+      if (data) {
+        Object.entries(data).forEach(([name, dias]) => {
+          const totalFuncionario = dias.monday + dias.tuesday + dias.wednesday + dias.thursday + dias.friday;
+          totalMonday += dias.monday;
+          totalTuesday += dias.tuesday;
+          totalWednesday += dias.wednesday;
+          totalThursday += dias.thursday;
+          totalFriday += dias.friday;
+          totalGeral += totalFuncionario;
+
           const row = document.createElement('tr');
           row.innerHTML = `
             <td>${name}</td>
-            <td>${dias.monday}</td>
-            <td>${dias.tuesday}</td>
-            <td>${dias.wednesday}</td>
-            <td>${dias.thursday}</td>
-            <td>${dias.friday}</td>
+            <td>${formatCurrency(dias.monday)}</td>
+            <td>${formatCurrency(dias.tuesday)}</td>
+            <td>${formatCurrency(dias.wednesday)}</td>
+            <td>${formatCurrency(dias.thursday)}</td>
+            <td>${formatCurrency(dias.friday)}</td>
+            <td>${formatCurrency(totalFuncionario)}</td>
           `;
           tbody.appendChild(row);
         });
+
+        document.getElementById('total-monday').textContent = formatCurrency(totalMonday);
+        document.getElementById('total-tuesday').textContent = formatCurrency(totalTuesday);
+        document.getElementById('total-wednesday').textContent = formatCurrency(totalWednesday);
+        document.getElementById('total-thursday').textContent = formatCurrency(totalThursday);
+        document.getElementById('total-friday').textContent = formatCurrency(totalFriday);
+        document.getElementById('total-geral').textContent = formatCurrency(totalGeral);
       } else {
-        tbody.innerHTML = `<tr><td colspan="6">Nenhum dado disponível</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7">Nenhum dado disponível</td></tr>`;
       }
     });
   </script>
